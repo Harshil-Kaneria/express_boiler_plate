@@ -8,6 +8,9 @@ let adminPanelRouter = require('./routes/admin_panel_routes');
 let apiOpenRoutes = require('./routes/api_open_routes');
 let apiSecureRoutes = require('./routes/api_secure_routes');
 
+global.helpers = require('./helpers');
+global.middlewares = require('./middlewares');
+
 let app = express();
 
 // view engine setup
