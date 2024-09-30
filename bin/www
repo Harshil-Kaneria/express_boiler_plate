@@ -1,68 +1,69 @@
 #!/usr/bin/env node
 
 // Configure environment file
-require('dotenv').config()
+require('dotenv').config();
 
 /**
  * Module dependencies.
  */
 var app = require('../app');
 var http = require('http');
+var cluster = require('cluster');
+var os = require('os');
 
 /**
- * Get port from environment and store in Express.
+ * Get base port from environment and store in Express.
  */
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+var basePort = parseInt(process.env.PORT || '3000', 10);
+app.set('basePort', basePort);
 
 /**
- * Create HTTP server.
+ * Check if clustering is enabled.
  */
-
-var server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
-
-function normalizePort(val) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
+if (process.env.CLUSTER_MODE === 'true' && cluster.isMaster) {
+  // Fork workers based on the number of CPU cores
+  const numCPUs = os.cpus().length;
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
   }
 
-  if (port >= 0) {
-    // port number
-    return port;
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died`);
+  });
+
+  // Log when the master process is running
+  console.log(`Master process is running`);
+
+} else {
+  // Determine the port for each worker
+  let workerPort;
+  
+  if (process.env.CLUSTER_PORT_SAME === 'true') {
+    // All workers listen on the same port
+    workerPort = basePort;
+  } else {
+    // Each worker gets a unique port
+    workerPort = basePort + cluster.worker.id;
   }
 
-  return false;
+  var server = http.createServer(app);
+
+  // Listen on the assigned port, on all network interfaces
+  server.listen(workerPort);
+  server.on('error', onError);
+  server.on('listening', () => onListening(workerPort));
 }
 
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
   }
+  var bind = 'Port ' + (process.env.CLUSTER_PORT_SAME === 'true' ? basePort : basePort + cluster.worker.id);
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
-
-  // handle specific listen errors with friendly messages
+  // Handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges');
@@ -80,9 +81,7 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string' ? ('pipe ' + addr) : ('port ' + addr.port);
-    console.log('Listening on ' + bind);
+function onListening(workerPort) {
+  const workerId = cluster.worker ? `Worker ${cluster.worker.id}` : 'Master';
+  console.log(`${workerId} is running on port ${workerPort} with PID ${process.pid}`);
 }
