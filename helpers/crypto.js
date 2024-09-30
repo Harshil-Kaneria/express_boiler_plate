@@ -27,7 +27,7 @@ module.exports = (ref,type="encrypt") => {
             const decipher = crypto.createDecipheriv(ALGORITHM, Buffer.from(SECRET_KEY, 'hex'), iv);
             let decrypted = decipher.update(encryptedTextBuffer, 'hex', 'utf8');
             decrypted += decipher.final('utf8');
-            return JSON.parse(Buffer.from(decrypted, 'base64').toString('utf-8'));
+            return JSON.parse(decrypted);
         }
     } catch (error) {
         console.error("Encryption/Decryption error:", error);
