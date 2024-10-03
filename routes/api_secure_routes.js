@@ -1,5 +1,28 @@
 var express = require('express');
 var router = express.Router();
+const { Admin } = require('../models');
+
+router.get('/users', async (req, res) => {
+
+  const admin = await Admin.create({
+    name: 'adminUser',
+    email: new Date().toString()+'admin@example.com',
+    password: '123456',
+  });
+  console.log('Admin created:', admin.toJSON());
+
+  await Admin.update(
+    { password: '1234567' },
+    {
+      where: {
+        email: "admin@admin.com",
+      }
+    },
+  );
+
+  const users = await Admin.findAll();
+  res.json(users);
+})
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
