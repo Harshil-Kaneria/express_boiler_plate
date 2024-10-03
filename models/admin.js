@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         validate: {
-          // isEmail: true,
+          isEmail: true,
         },
       },
       password: {
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      tableName: "Admins",
+      tableName: "admins",
       timestamps: true,
       hooks: {
         beforeBulkUpdate: async (options) => {
@@ -39,8 +39,8 @@ module.exports = (sequelize, DataTypes) => {
             options.attributes.password = hashedPassword;
           }
         },
-        beforeCreate: async (admin) => {
-          admin.password = await bcrypt.hash(admin.password, saltRounds);
+        beforeCreate: async (data) => {
+          data.password = await bcrypt.hash(data.password, saltRounds);
         }
       },
     }
