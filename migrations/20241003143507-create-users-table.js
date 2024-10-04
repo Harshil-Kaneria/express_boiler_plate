@@ -27,6 +27,15 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: false
         },
+        otp: {
+          type: Sequelize.STRING,
+          allowNull: true
+        },
+        isVerified: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false,
+          defaultValue: false
+        },
         isDeleted: {
           type: Sequelize.BOOLEAN,
           allowNull: false,
