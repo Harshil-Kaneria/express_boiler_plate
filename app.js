@@ -6,8 +6,7 @@ let helmet = require('helmet');
 let rateLimit = require('express-rate-limit');
 let bodyParser = require('body-parser');
 let cors = require('cors');
-const Joi = require('joi');
-const { validate } = require('express-validation');
+let Joi = require('joi');
 
 let corsConfig = require('./config/cors');
 
@@ -18,7 +17,6 @@ let apiSecureRoutesV1 = require('./routes/api_secure_routes_v1');
 global.helpers = require('./helpers');
 global.middlewares = require('./middlewares');
 global.Joi = Joi
-global.validate = validate 
 
 let app = express();
 

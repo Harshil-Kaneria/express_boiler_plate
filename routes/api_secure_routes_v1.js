@@ -1,13 +1,9 @@
 var express = require('express');
 var router = express.Router();
+const controllers = require('./../controllers/v1');
 
-router.get('/user-details', function (req, res, next) {
-  let data = {
-    name:'harshil',
-    age:27,
-    gender:"male"
-  }
-  helpers.response('OK',true,'okay',data,"encrypt")
-});
+router.get('/user-details',controllers['user-details']);
+router.post('/user-update',controllers['user-update']);
+router.post('/user-change-password',controllers['user-change-password']);
 
 module.exports = router;
