@@ -15,8 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       uuid: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
+        unique: true
       },
       username: {
         type: DataTypes.STRING,
@@ -26,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
         validate: {
           isEmail: true,
         },
@@ -62,9 +60,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         beforeCreate: async (data) => {
           const [hashedOtp, hashedPassword] = await Promise.all([
-            bcrypt.hash(UniqueOTP(), saltRounds),
+            bcrypt.hash(''+UniqueOTP(), saltRounds),
             bcrypt.hash(data.password, saltRounds)
-          ]); 
+          ]);
           data.uuid = uuidv4()
           data.otp = hashedOtp;
           data.password = hashedPassword;
@@ -78,7 +76,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.prototype.validateOTP = async function (otp) {
-    return await bcrypt.compare(otp, this.otp);
+    return await bcrypt.compare(otp,this.otp);
   };
 
   return User;
