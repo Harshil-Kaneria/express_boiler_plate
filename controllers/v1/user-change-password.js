@@ -1,17 +1,14 @@
-const validateInputs = (data) => {
-    const schema = Joi.object({
-        password: Joi.string().min(6).required(),
-        new_password: Joi.string().min(6).required().custom((value, helpers) => {
-            const { password } = helpers.state.ancestors[0];
-            if (value === password) {
-                return helpers.error('any.invalid');
-            }
-            return value;
-        }),
-        confirm_password: Joi.string().min(6).required().valid(Joi.ref('new_password')),
-    })
-    return schema.validate(data);
-}
+const validateInputs = (data) => Joi.object({
+    password: Joi.string().min(6).required(),
+    new_password: Joi.string().min(6).required().custom((value, helpers) => {
+        const { password } = helpers.state.ancestors[0];
+        if (value === password) {
+            return helpers.error('any.invalid');
+        }
+        return value;
+    }),
+    confirm_password: Joi.string().min(6).required().valid(Joi.ref('new_password')),
+}).validate(data)
 
 module.exports = () => {
     try{

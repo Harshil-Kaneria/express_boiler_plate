@@ -1,9 +1,6 @@
-const validateInputs = (data) => {
-    const schema = Joi.object({
-        email: Joi.string().email().required()
-    });
-    return schema.validate(data);
-}
+const validateInputs = (data) => Joi.object({
+    email: Joi.string().email().required()
+}).validate(data)
 
 module.exports = () => {
     try{

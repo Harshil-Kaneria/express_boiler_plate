@@ -28,11 +28,14 @@ if (process.env.CLUSTER_MODE === 'true' && cluster.isMaster) {
   }
 
   cluster.on('exit', (worker, code, signal) => {
-    console.log(`Worker ${worker.process.pid} died`);
+    console.log(`Worker ${worker.process.pid} died. Restarting...`);
+
+    // Fork a new worker when a worker dies
+    cluster.fork();
   });
 
   // Log when the master process is running
-  console.log(`Master process is running`);
+  console.log('Master process is running');
 
 } else {
   // Determine the port for each worker

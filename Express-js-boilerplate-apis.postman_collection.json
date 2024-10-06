@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "d3de920d-2043-4eed-ac60-22d590d395e3",
+		"name": "Express-js-boilerplate-apis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38816260"
+	},
+	"item": [
+		{
+			"name": "v1",
+			"item": [
+				{
+					"name": "public-api",
+					"item": [
+						{
+							"name": "User-login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "email",
+											"value": "hk_work@gmail.com",
+											"type": "default"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/public/api/v1/user-login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"public",
+										"api",
+										"v1",
+										"user-login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User-register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "hk_work",
+											"type": "default"
+										},
+										{
+											"key": "email",
+											"value": "hk_work@gmail.com",
+											"type": "default"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/public/api/v1/user-register",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"public",
+										"api",
+										"v1",
+										"user-register"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "secure-api",
+					"item": [
+						{
+							"name": "User details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/user-details",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"user-details"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -31,6 +31,10 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: true
         },
+        verification_token: {
+          type: Sequelize.STRING,
+          allowNull: true
+        },
         isVerified: {
           type: Sequelize.BOOLEAN,
           allowNull: false,

@@ -51,6 +51,7 @@ app.use((req, res, next) => {
 
 app.use('/admin', adminPanelRouter);
 app.use('/public/api/v1', apiOpenRoutesV1);
+app.use(()=>middlewares.user_authentication.validateUserToken())
 app.use('/api/v1', apiSecureRoutesV1);
 
 // catch 404 and forward to error handler
