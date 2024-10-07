@@ -11,10 +11,15 @@ module.exports = async () => {
         const { error, value } = validateInputs(req.body)
         if(error) return helpers.response('Bad Request',false,'Please provide proper params',error.details)
 
-        const [user, created] = await User.findOrCreate({
+        let [user, created] = await User.findOrCreate({
             where: { email: value.email,isDeleted: false },
             defaults: value
         });
+
+        if(created || user.dataValues.isVerified==false){
+            const data = await user.generateOtp();
+            if(data.status) helpers.send_mail.sendMail(user.email,`Verification otp for ${process.env.APP_NAME}`,'otp',{otp:data.otp})
+        }
         
         created ? helpers.response('Created',true,'User created successfully',value) : helpers.response('Conflict',false,'User already exist please login',value)
         

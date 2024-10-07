@@ -63,14 +63,13 @@ module.exports = (sequelize, DataTypes) => {
           }
         },
         beforeCreate: async (data) => {
-          const [hashedOtp, hashedPassword] = await Promise.all([
-            bcrypt.hash(''+UniqueOTP(), saltRounds),
-            bcrypt.hash(data.password, saltRounds)
-          ]);
-          data.uuid = uuidv4()
-          data.otp = hashedOtp;
+          const hashedPassword = await bcrypt.hash(data.password, saltRounds)
           data.password = hashedPassword;
+          data.uuid = uuidv4()
         }
+      },
+      defaultScope: {
+        attributes: { exclude: ['createdAt', 'updatedAt','password','otp'] }
       },
     }
   );
@@ -81,6 +80,25 @@ module.exports = (sequelize, DataTypes) => {
 
   User.prototype.validateOTP = async function (otp) {
     return await bcrypt.compare(otp,this.otp);
+  };
+
+  User.prototype.generateOtp = async function () {
+    try {
+      const otp =  ''+UniqueOTP()
+      this.otp = await bcrypt.hash(otp, saltRounds); 
+      await this.save();
+      return {
+        status : true,
+        otp:otp,
+        error:{}
+      }
+    } catch (error) {
+      return {
+        status : false,
+        otp:'',
+        error:error
+      }
+    }
   };
 
   return User;

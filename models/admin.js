@@ -43,6 +43,9 @@ module.exports = (sequelize, DataTypes) => {
           data.password = await bcrypt.hash(data.password, saltRounds);
         }
       },
+      defaultScope: {
+        attributes: { exclude: ['createdAt', 'updatedAt','password'] }
+      },
     }
   );
 
