@@ -27,7 +27,6 @@ module.exports = async () => {
             email:user.email
         })
 
-        delete user.uuid
         delete user.password
         delete user.isVerified
         helpers.response('OK',true,'User login successfully',{...user,token})

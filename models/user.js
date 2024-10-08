@@ -79,7 +79,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.prototype.validateOTP = async function (otp) {
-    return await bcrypt.compare(otp,this.otp);
+    return await bcrypt.compare(`${otp}`,this.otp);
   };
 
   User.prototype.generateOtp = async function () {

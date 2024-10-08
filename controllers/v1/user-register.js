@@ -21,6 +21,7 @@ module.exports = async () => {
             if(data.status) helpers.send_mail.sendMail(user.email,`Verification otp for ${process.env.APP_NAME}`,'otp',{otp:data.otp})
         }
         
+        value.uuid = user.dataValues.uuid
         created ? helpers.response('Created',true,'User created successfully',value) : helpers.response('Conflict',false,'User already exist please login',value)
         
     }catch(error){
